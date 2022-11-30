@@ -25,3 +25,41 @@ WHERE STUDENT_NO IN ('A513079', 'A513090', 'A513091', 'A513110', 'A513119');
 SELECT DEPARTMENT_NAME, CATEGORY
 FROM TB_DEPARTMENT
 WHERE CAPACITY >= 20 AND CAPACITY <= 30;
+
+-- 6. 춘 기술대학교는 총장을 제외하고 모든 교수들이 소속 학과를 가지고 있다. 그럼 춘
+-- 기술대학교 총장의 이름을 알아낼 수 있는 SQL 문장을 작성하시오.
+
+SELECT PROFESSOR_NAME
+FROM TB_PROFESSOR
+WHERE DEPARTMENT_NO IS NULL;
+
+-- 7. 혹시 전산상의 착오로 학과가 지정되어 있지 않은 학생이 있는지 확인하고자 한다.
+-- 어떠한 SQL 문장을 사용하면 될 것인지 작성하시오.
+
+SELECT *
+FROM TB_STUDENT
+WHERE DEPARTMENT_NO IS NULL;
+
+-- 8. 수강신청을 하려고 한다. 선수과목 여부를 확인해야 하는데, 선수과목이 존재하는
+-- 과목들은 어떤 과목인지 과목번호를 조회해보시오.
+
+SELECT CLASS_NAME
+FROM TB_CLASS
+WHERE preattending_class_no IS NOT NULL;
+
+-- 9. 춘 대학에는 어떤 계열(CATEGORY)들이 있는지 조회해보시오.
+
+SELECT DISTINCT CATEGORY
+FROM TB_DEPARTMENT;
+
+-- 10. 02 학번 전주 거주자들의 모임을 맊들려고 전다. 휴학한 사람들은 제외한 재학중인
+-- 학생들의 학번, 이름, 주민번호를 출력하는 구문을 작성하시오.
+
+SELECT STUDENT_NO, STUDENT_NAME, STUDENT_SSN
+FROM TB_STUDENT
+WHERE SUBSTR(ENTRANCE_DATE, 1, 2) = 02
+AND SUBSTR(STUDENT_ADDRESS, 1, 2) = '전주' AND absence_yn = 'N';
+
+
+
+

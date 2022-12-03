@@ -44,11 +44,29 @@ AND L.NATIONAL_CODE = N.NATIONAL_CODE
 AND NATIONAL_NAME IN ('한국', '일본');
 
 --8. 한 사원과 같은 부서에서 일하는 사원의 이름 조회
-SELECT 
+
 
 --9. 보너스가 없고 직급 코드가 J4이거나 J7인 사원의 이름, 직급 명, 급여 조회(NVL 이용)
+SELECT EMP_NAME, JOB_CODE, SALARY
+FROM EMPLOYEE
+WHERE BONUS IS NULL
+AND (JOB_CODE IN ('J4', 'J7'));
+
+
 --10. 보너스 포함한 연봉이 높은 5명의 사번, 이름, 부서 명, 직급, 입사일, 순위 조회
+SELECT EMP_ID, EMP_NAME, DEPT_TITLE, JOB_NAME, HIRE_DATE, ROWNUM
+FROM EMPLOYEE E, DEPARTMENT D, JOB J,
+(SELECT (SALARY*12) + (SALARY*NVL(BONUS, 0)*12) AS "연봉"
+FROM EMPLOYEE)
+WHERE E.JOB_CODE = J.JOB_CODE AND E.DEPT_CODE = D.DEPT_ID
+AND ROWNUM <= 5;
+
+--(SALARY*12) + (SALARY*NVL(BONUS, 0)*12)
+
 --11. 부서 별 급여 합계가 전체 급여 총 합의 20%보다 많은 부서의 부서 명, 부서 별 급여 합계 조회
 --11-1. JOIN과 HAVING 사용
 --11-2. 인라인 뷰 사용
+
+
+
 --12. 부서 명과 부서 별 급여 합계 조회

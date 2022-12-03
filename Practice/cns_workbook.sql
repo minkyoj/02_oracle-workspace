@@ -135,8 +135,10 @@ WHERE STUDENT_NO = 'A517178';
 -- 10. 학과별 학생수를 구하여 "학과번호", "학생수(명)" 의 형태로 헤더를 맊들어 결과값이
 -- 출력되도록 하시오.
 
-SELECT DEPARTMENT_NO AS "학과번호", COUNT AS "학생수(명)"
-FROM TB_STUDENT;
+SELECT DEPARTMENT_NO AS "학과번호", COUNT (*) AS "학생수(명)"
+FROM TB_STUDENT
+GROUP BY DEPARTMENT_NO
+ORDER BY 1;
 
 -- 11. 지도 교수를 배정받지 못한 학생의 수는 몇 명 정도 되는 알아내는 SQL 문을
 -- 작성하시오.
@@ -155,6 +157,33 @@ FROM TB_GRADE
 WHERE STUDENT_NO = 'A112113'
 GROUP BY (SUBSTR(TERM_NO, 1, 4));
 
+-- 13. 학과 별 휴학생 수를 파악하고자한다. 학과 번호와 휴학생 수를 표시하는 SQL 문장을
+-- 작성하시오.
+SELECT DEPARTMENT_NO AS "학과코드명", COUNT(DECODE(ABSENCE_YN,'Y',0)) AS "휴학생수"
+FROM TB_STUDENT
+GROUP BY DEPARTMENT_NO
+ORDER BY 1;
+
+-- 14. 춘 대학교에 다니는 동명이인(同名異人) 학생들의 이름을 찾고자 한다. 어떤 SQL
+-- 문장을 사용하면 가능하겠는가?
+SELECT STUDENT_NAME, COUNT(*)
+FROM TB_STUDENT
+GROUP BY STUDENT_NAME
+HAVING COUNT(DISTINCT STUDENT_SSN) > 1;
+
+-- 15. 학번이 A112113 인 김고운 학생의 년도, 학기 별 평점과 년도 별 누적 평점 , 총
+-- 평점을 구하는 SQL 문을 작성하시오. (단, 평점은 소수점 1 자리까지만 반올림하여
+-- 표시한다.)
+
+SELECT SUBSTR(TERM_NO, 1, 4) AS "년도", SUBSTR(TERM_NO, 5, 2) AS "학기", ROUND(AVG(POINT),1)
+FROM TB_GRADE
+WHERE STUDENT_NO = 'A112113'
+GROUP BY ROLLUP(SUBSTR(TERM_NO, 1, 4)), ROLLUP(SUBSTR(TERM_NO, 5, 2))
+ORDER BY 1, 2;
+
+
+------
+-- [Additional SELECT - Option]
 
 -- 1. 학생이름과 주소지를 표시하시오. 단, 출력 헤더는 "학생 이름", "주소지"로 하고,
 -- 정렬은 이름으로 오름차순 표시하도록 한다.
@@ -231,12 +260,35 @@ AND D.CATEGORY = '인문사회';
 -- "전체 평점"을 출력하는 SQL 문장을 작성하시오. (단, 평점은 소수점 1 자리까지만
 -- 반올림하여 표시한다.)
 
+SELECT S.STUDENT_NO AS "학번", S.STUDENT_NAME AS "학생이름", ROUND(AVG(POINT),1)
+FROM TB_STUDENT S, TB_GRADE G, TB_DEPARTMENT D
+WHERE S.STUDENT_NO = G.STUDENT_NO
+AND S.DEPARTMENT_NO = D.DEPARTMENT_NO
+AND D.DEPARTMENT_NAME = '음악학과'
+GROUP BY S.STUDENT_NO, S.STUDENT_NAME
+ORDER BY 1;
 
 
+-- 11. 학번이 A313047 인 학생이 학교에 나오고 있지 않다. 지도 교수에게 내용을 젂달하기
+-- 위핚 학과 이름, 학생 이름과 지도 교수 이름이 필요하다. 이때 사용핛 SQL 문을
+-- 작성하시오. 단, 출력헤더는 ?학과이름?, ?학생이름?, ?지도교수이름?으로
+-- 출력되도록 핚다.
 
+SELECT DEPARTMENT_NAME AS "학과이름", STUDENT_NAME AS "학생이름" , PROFESSOR_NAME AS "지도교수이름"
+FROM TB_DEPARTMENT D, TB_STUDENT S, TB_PROFESSOR P
+WHERE D.DEPARTMENT_NO = S.DEPARTMENT_NO
+--AND D.DEPARTMENT_NO = P.DEPARTMENT_NO
+AND S.COACH_PROFESSOR_NO = P.PROFESSOR_NO
+AND S.STUDENT_NO = 'A313047';
 
+-- 12. 2007 년도에 '인갂관계롞' 과목을 수강핚 학생을 찾아 학생이름과 수강학기름 표시하는
+-- SQL 문장을 작성하시오.
 
-
+SELECT STUDENT_NAME, SUBSTR(TERM_NO, 1, 4) AS "TERM_NAME"
+FROM TB_STUDENT S, TB_CLASS C, TB_GRADE G
+WHERE S.STUDENT_NO = G.STUDENT_NO
+AND G.CLASS_NO = C.CLASS_NO
+AND 
 
 
 

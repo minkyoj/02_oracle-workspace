@@ -202,12 +202,34 @@ ORDER BY 2 DESC, 1 ASC;
 -- 문을 작성하시오.
 
 SELECT STUDENT_NO, STUDENT_NAME, DEPARTMENT_NAME 
-FROM TB_STUDENT;
+FROM TB_STUDENT S, TB_DEPARTMENT D
+WHERE S.DEPARTMENT_NO = D.DEPARTMENT_NO;
 
+-- 7. 춘 기술대학교의 과목 이름과 과목의 학과 이름을 출력하는 SQL 문장을 작성하시오.
 
+SELECT CLASS_NAME, DEPARTMENT_NAME
+FROM TB_CLASS C, TB_DEPARTMENT D
+WHERE C.DEPARTMENT_NO = D.DEPARTMENT_NO;
 
+-- 8. 과목별 교수 이름을 찾으려고 핚다. 과목 이름과 교수 이름을 출력하는 SQL 문을
+-- 작성하시오.
 
+SELECT CLASS_NAME, PROFESSOR_NAME
+FROM TB_CLASS C , TB_PROFESSOR P
+WHERE C.DEPARTMENT_NO = P.DEPARTMENT_NO;
 
+-- 9. 8 번의 결과 중 ‘인문사회’ 계열에 속한 과목의 교수 이름을 찾으려고 한다. 이에
+-- 해당하는 과목 이름과 교수 이름을 출력하는 SQL 문을 작성하시오.
+
+SELECT CLASS_NAME, PROFESSOR_NAME
+FROM TB_CLASS C , TB_PROFESSOR P, TB_DEPARTMENT D
+WHERE C.DEPARTMENT_NO = P.DEPARTMENT_NO
+AND D.DEPARTMENT_NO = C.DEPARTMENT_NO
+AND D.CATEGORY = '인문사회';
+
+-- 10. ‘음악학과’ 학생들의 평점을 구하려고 한다. 음악학과 학생들의 "학번", "학생 이름",
+-- "전체 평점"을 출력하는 SQL 문장을 작성하시오. (단, 평점은 소수점 1 자리까지만
+-- 반올림하여 표시한다.)
 
 
 

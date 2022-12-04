@@ -85,10 +85,11 @@ WHERE PROFESSOR_NAME NOT LIKE '___';
 -- 2000 년 이후 출생자는 없으며 출력 헤더는 "교수이름", "나이"로 핚다. 나이는 ‘만’으로
 -- 계산한다.)
 
-SELECT PROFESSOR_NAME AS "교수이름",
-        EXTRACT(YEAR FROM SYSDATE)- EXTRACT(YEAR FROM TO_DATE(SUBSTR(PROFESSOR_SSN, 1, 6), 'RRMMDD') AS "나이"
+SELECT PROFESSOR_NAME 교수이름, 
+FLOOR(MONTHS_BETWEEN(SYSDATE, TO_DATE('19' || SUBSTR(PROFESSOR_SSN, 1, 6), 'YYYYMMDD')) / 12 ) 나이
 FROM TB_PROFESSOR
-ORDER BY ;
+WHERE SUBSTR(PROFESSOR_SSN, 8, 1) = 1
+ORDER BY 2;
 
 -- 4. 교수들의 이름 중 성을 제외한 이름맊 출력하는 SQL 문장을 작성하시오. 출력 헤더는
 -- ?이름? 이 찍히도록 핚다. (성이 2 자인 경우는 교수는 없다고 가정하시오)
@@ -149,7 +150,7 @@ WHERE COACH_PROFESSOR_NO IS NULL;
 
 -- 12. 학번이 A112113 인 김고운 학생의 년도 별 평점을 구하는 SQL 문을 작성하시오. 단,
 -- 이때 출력 화면의 헤더는 "년도", "년도 별 평점" 이라고 찍히게 하고, 점수는 반올림하여
--- 소수점 이하 한 자리까지맊 표시핚다.
+-- 소수점 이하 한 자리까지만 표시핚다.
 
 --SELECT DISTINCT(SUBSTR(TERM_NO, 1, 4)) AS "년도 별 평점", SUM(POINT)
 SELECT (SUBSTR(TERM_NO, 1, 4)) AS "년도", ROUND(SUM(POINT) / COUNT(POINT), 1) AS "년도 별 평점"
@@ -174,13 +175,20 @@ HAVING COUNT(DISTINCT STUDENT_SSN) > 1;
 -- 15. 학번이 A112113 인 김고운 학생의 년도, 학기 별 평점과 년도 별 누적 평점 , 총
 -- 평점을 구하는 SQL 문을 작성하시오. (단, 평점은 소수점 1 자리까지만 반올림하여
 -- 표시한다.)
-
+/*
 SELECT SUBSTR(TERM_NO, 1, 4) AS "년도", SUBSTR(TERM_NO, 5, 2) AS "학기", ROUND(AVG(POINT),1)
 FROM TB_GRADE
 WHERE STUDENT_NO = 'A112113'
 GROUP BY ROLLUP(SUBSTR(TERM_NO, 1, 4)), ROLLUP(SUBSTR(TERM_NO, 5, 2))
 ORDER BY 1, 2;
+*/
 
+SELECT DECODE(GROUPING(SUBSTR(TERM_NO,1,4)), 0,SUBSTR(TERM_NO,1,4), 1,' ') AS "년도", 
+        DECODE(GROUPING(SUBSTR(TERM_NO,5,2)), 0,SUBSTR(TERM_NO,5,2), 1,' ') AS "학기", 
+        ROUND(AVG(point),1) AS "평균"
+FROM TB_GRADE
+WHERE STUDENT_NO = 'A112113'
+GROUP BY ROLLUP(SUBSTR(TERM_NO,1,4), SUBSTR(TERM_NO,5,2));
 
 ------
 -- [Additional SELECT - Option]
@@ -243,18 +251,18 @@ WHERE C.DEPARTMENT_NO = D.DEPARTMENT_NO;
 -- 8. 과목별 교수 이름을 찾으려고 핚다. 과목 이름과 교수 이름을 출력하는 SQL 문을
 -- 작성하시오.
 
-SELECT CLASS_NAME, PROFESSOR_NAME
-FROM TB_CLASS C , TB_PROFESSOR P
-WHERE C.DEPARTMENT_NO = P.DEPARTMENT_NO;
+SELECT CLASS_NAME, PROFESSOR_NAME FROM TB_CLASS 
+JOIN TB_CLASS_PROFESSOR USING(CLASS_NO)
+JOIN TB_PROFESSOR USING(PROFESSOR_NO);
 
 -- 9. 8 번의 결과 중 ‘인문사회’ 계열에 속한 과목의 교수 이름을 찾으려고 한다. 이에
 -- 해당하는 과목 이름과 교수 이름을 출력하는 SQL 문을 작성하시오.
 
-SELECT CLASS_NAME, PROFESSOR_NAME
-FROM TB_CLASS C , TB_PROFESSOR P, TB_DEPARTMENT D
-WHERE C.DEPARTMENT_NO = P.DEPARTMENT_NO
-AND D.DEPARTMENT_NO = C.DEPARTMENT_NO
-AND D.CATEGORY = '인문사회';
+SELECT CLASS_NAME, PROFESSOR_NAME FROM TB_CLASS 
+JOIN TB_CLASS_PROFESSOR USING(CLASS_NO)
+JOIN TB_PROFESSOR P USING(PROFESSOR_NO) 
+JOIN TB_DEPARTMENT D ON(P.DEPARTMENT_NO = D.DEPARTMENT_NO)  
+WHERE CATEGORY = '인문사회';
 
 -- 10. ‘음악학과’ 학생들의 평점을 구하려고 한다. 음악학과 학생들의 "학번", "학생 이름",
 -- "전체 평점"을 출력하는 SQL 문장을 작성하시오. (단, 평점은 소수점 1 자리까지만
@@ -281,7 +289,7 @@ WHERE D.DEPARTMENT_NO = S.DEPARTMENT_NO
 AND S.COACH_PROFESSOR_NO = P.PROFESSOR_NO
 AND S.STUDENT_NO = 'A313047';
 
--- 12. 2007 년도에 '인갂관계롞' 과목을 수강핚 학생을 찾아 학생이름과 수강학기름 표시하는
+-- 12. 2007 년도에 '인갂관계론' 과목을 수강핚 학생을 찾아 학생이름과 수강학기름 표시하는
 -- SQL 문장을 작성하시오.
 
 SELECT STUDENT_NAME, SUBSTR(TERM_NO, 1, 6) AS "TERM_NAME"
@@ -306,7 +314,8 @@ AND PROFESSOR_NO IS NULL;
 SELECT CLASS_NAME, DEPARTMENT_NAME FROM TB_CLASS 
 JOIN TB_DEPARTMENT USING(DEPARTMENT_NO) 
 LEFT JOIN TB_CLASS_PROFESSOR USING(CLASS_NO) 
-WHERE CATEGORY = '예체능' AND PROFESSOR_NO IS NULL;
+WHERE CATEGORY = '예체능' AND PROFESSOR_NO IS NULL
+ORDER BY DEPARTMENT_NAME;
 
 -- 14. 춘 기술대학교 서반아어학과 학생들의 지도교수를 게시하고자 핚다. 학생이름과
 -- 지도교수 이름을 찾고 맊일 지도 교수가 없는 학생일 경우 "지도교수 미지정?으로
@@ -331,7 +340,7 @@ GROUP BY S.STUDENT_NO, S.STUDENT_NAME, D.DEPARTMENT_NAME
 HAVING AVG(G.POINT) >= 4.0
 ORDER BY 1;
 
--- 16. 환경조경학과 젂공과목들의 과목 별 평점을 파악핛 수 있는 SQL 문을 작성하시오.
+-- 16. 환경조경학과 전공과목들의 과목 별 평점을 파악핛 수 있는 SQL 문을 작성하시오.
 SELECT C.CLASS_NO, C.CLASS_NAME, ROUND(AVG(G.POINT),8)
 FROM TB_CLASS C
 JOIN TB_DEPARTMENT D ON (D.DEPARTMENT_NO = C.DEPARTMENT_NO)

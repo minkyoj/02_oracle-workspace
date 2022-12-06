@@ -542,6 +542,7 @@ ROLLBACK;
     - ON DELETE CASCADE : 부모 데이터 삭제시 해당 데이터를 쓰고있는 자식데이터도 같이 삭제시킴
 */
 
+
 DROP TABLE MEM;
 
 -- ON DELETE SET NULL

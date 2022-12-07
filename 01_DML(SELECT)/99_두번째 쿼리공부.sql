@@ -39,6 +39,18 @@ ORDER BY 1;
 -- JOIN 종류 (내부조인, 외부조인, 등등...)  별 특징, 역할
 -- 함수 종류 
 
+-- 직원의 급여 조회시 각 직급별로 인상해서 조회
+-- J7인 사원은 급여를 10% 인상 (SALARY * 1.1)
+-- J6인 사원은 급여를 15% 인상 (SALARY * 1.15)
+-- J5인 사원은 급여를 20% 인상 (SALARY * 1.2)
+
+SELECT EMP_NAME, JOB_CODE, SALARY,
+       DECODE(JOB_CODE, 'J7', SALARY * 1.1,
+                        'J6', SALARY * 1.15,
+                        'J5', SALARY * 1.2,
+                        SALARY * 1.05) AS "인상된 급여"
+FROM EMPLOYEE;
+
 
 -- '21/09/28'와 같은 문자열을 가지고 '2021-09-28'로 표현해보기
 SELECT TO_CHAR(TO_DATE('21/09/28'), 'YYYY-MM-DD')

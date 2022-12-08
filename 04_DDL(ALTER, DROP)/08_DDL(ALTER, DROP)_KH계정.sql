@@ -78,7 +78,7 @@ ALTER TABLE DEPT_COPY2 DROP COLUMN LOCATION_ID;
 -- ORA-12983: cannot drop all columns in a table
 --------------------------------------------------------------------------------
 -- 2) 제약조건 추가 / 삭제
-/*
+/* 
     2_1) 제약조건 추가
     PRIMARY KEY : ADD PRIMARY KEY(컬럼명)
     FOREIGN KEY : ADD FOREIGN KEY(컬럼명) REFERENCES 참조할테이블명[(컬럼명)]

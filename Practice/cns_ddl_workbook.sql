@@ -102,6 +102,65 @@ FK_테이블이름_컬럼이름으로 지정한다. (ex. FK_DEPARTMENT_CATEGORY )
 ALTER TABLE TB_DEPARTMENT
     ADD CONSTRAINT FK_DEPARTMENT_CATEGORY FOREIGN KEY (CATEGORY) REFERENCES TB_CATEGORY(CATEGORY_NAME);
 
+-- 10. 춘 기술대학교 학생들의 정보만이 포함되어 있는 학생일반정보 VIEW 를 만들고자 한다.
+--아래 내용을 참고하여 적절한 SQL 문을 작성하시오.
+
+SELECT * FROM TB_STUDENT;
+
+CREATE VIEW VW_학생일반정보
+AS SELECT STUDENT_NO AS "학번", STUDENT_NAME AS "학생이름", STUDENT_ADDRESS AS "주소"
+   FROM TB_STUDENT;
+   
+SELECT * FROM VW_학생일반정보;
+   
+--DROP VIEW VW_학생일반정보;
+   
+-- 권한
+GRANT CREATE VIEW TO WORKBOOK;
+
+-- 11. 춘 기술대학교는 1 년에 두 번씩 학과별로 학생과 지도교수가 지도 면담을 진행한다.
+-- 이를 위해 사용할 학생이름, 학과이름, 담당교수이름 으로 구성되어 있는 VIEW 를 만드시오.
+-- 이때 지도 교수가 없는 학생이 있을 수 있음을 고려하시오 (단, 이 VIEW 는 단순 SELECT
+-- 만을 한 경우 학과별로 정렬되어 화면에 보여지게 만드시오.)
+
+SELECT * FROM TB_STUDENT;
+SELECT * FROM TB_DEPARTMENT;
+SELECT * FROM TB_PROFESSOR;
+
+CREATE VIEW VW_지도면담
+AS SELECT STUDENT_NAME AS "학생이름", DEPARTMENT_NAME AS "학과이름",
+          PROFESSOR_NAME AS "지도교수이름"
+   FROM TB_STUDENT
+   JOIN TB_DEPARTMENT USING (DEPARTMENT_NO)
+   JOIN TB_PROFESSOR ON (COACH_PROFESSOR_NO = PROFESSOR_NO);
+
+SELECT * FROM VW_지도면담;
+
+-- 12. 모든 학과의 학과별 학생 수를 확인핛 수 있도록 적젃핚 VIEW 를 작성해 보자.
+
+CREATE VIEW VW_학과별학생수
+AS SELECT DEPARTMENT_NAME, COUNT(*) AS "STUDENT_COUNT"
+    FROM TB_STUDENT
+    JOIN TB_DEPARTMENT USING (DEPARTMENT_NO)
+    GROUP BY DEPARTMENT_NAME;
+
+-- 13. 위에서 생성핚 학생일반정보 View 를 통해서 학번이 A213046 인 학생의 이름을 본인
+-- 이름으로 변경하는 SQL 문을 작성하시오.
+
+SELECT * FROM VW_학생일반정보;
+
+UPDATE VW_학생일반정보
+SET 학생이름 = '탱민교'
+WHERE 학번 = 'A213046';
+
+-- 14. 13 번에서와 같이 VIEW 를 통해서 데이터가 변경될 수 있는 상황을 막으려면 VIEW 를
+-- 어떻게 생성해야 하는지 작성하시오.
+
+CREATE VIEW VW_학생일반정보
+AS SELECT STUDENT_NO AS "학번", STUDENT_NAME AS "학생이름", STUDENT_ADDRESS AS "주소"
+   FROM TB_STUDENT
+   WITH CHECK OPTION;
+
 --15. 춘 기술대학교는 매년 수강신청 기간만 되면 특정 인기 과목들에 수강 신청이 몰려
 --문제가 되고 있다. (2005~2009) 기준으로 수강인원이 가장 많았던 3 과목을 찾는 구문을
 --작성해보시오.

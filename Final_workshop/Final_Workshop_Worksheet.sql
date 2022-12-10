@@ -156,18 +156,49 @@ SELECT * FROM TB_WRITER;
 SELECT * FROM TB_BOOK_TRANSLATOR;
 
 
-SELECT BOOK_NM, WRITER_NM
+SELECT BOOK_NM, WRITER_NM, ISSUE_DATE
 FROM TB_BOOK_TRANSLATOR
 JOIN TB_BOOK USING (BOOK_NO)
 JOIN TB_WRITER USING (WRITER_NO)
 WHERE SUBSTR(TO_CHAR(ISSUE_DATE, 'YYYYMMDD'), 1, 4) =
       2007;
 
---  12번 결과를 활용하여 대상 번역서들의 출판일을 변경할 수 없도록 하는 뷰를 생성하는 SQL
+-- 13. 12번 결과를 활용하여 대상 번역서들의 출판일을 변경할 수 없도록 하는 뷰를 생성하는 SQL
 -- 구문을 작성하시오. (뷰 이름은 “VW_BOOK_TRANSLATOR”로 하고 도서명, 번역자, 출판일이
 -- 표시되도록 할 것)
-  
+
+CREATE VIEW VW_BOOK_TRANSLATOR
+AS SELECT BOOK_NM, WRITER_NM, ISSUE_DATE
+    FROM TB_BOOK_TRANSLATOR
+    JOIN TB_BOOK USING (BOOK_NO)
+    JOIN TB_WRITER USING (WRITER_NO)
+    WHERE SUBSTR(TO_CHAR(ISSUE_DATE, 'YYYYMMDD'), 1, 4) = 2007
+    WITH READ ONLY;
+
+GRANT CREATE VIEW TO FINAL;
+
+SELECT * FROM VW_BOOK_TRANSLATOR;
 
 
+-- 새로운 출판사(춘 출판사)와 거래 계약을 맺게 되었다. 제시된 다음 정보를 입력하는 SQL
+-- 구문을 작성하시오.(COMMIT 처리할 것)
+
+/*
+출판사      사무실 전화번호     거래여부
+춘 출판사   02-6710-3737     Default 값 사용
+*/
+
+SELECT * FROM TB_PUBLISHER;
+
+INSERT INTO TB_PUBLISHER
+VALUES('춘 출판사', '02-6710-3737', DEFAULT);
+
+-- 15. 동명이인(同名異人) 작가의 이름을 찾으려고 한다. 이름과 동명이인 숫자를 표시하는 SQL 구문을
+-- 작성하시오.
+
+SELECT WRITER_NM, COUNT(*)
+FROM TB_WRITER
+GROUP BY WRITER_NM
+HAVING COUNT(WRITER_NM) > 1;
 
 

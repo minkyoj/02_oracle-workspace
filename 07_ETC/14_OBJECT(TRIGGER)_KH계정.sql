@@ -269,6 +269,7 @@ BEGIN
             INSERT INTO TB_ABSENCE
             VALUES (SEQ_ABS_NO.NEXTVAL, :NEW.STU_NO, SYSDATE, 'Y');
     END IF;
+    /*
     -- 학생테이블의 퇴졸여부가 졸업이 되는 경우 해당데이터를 DELETE 처리 한다.
     IF (:NEW.STU_STATUS = '졸업')
         THEN
@@ -277,14 +278,14 @@ BEGIN
             DELETE FROM TB_ABSENCE
             WHERE STU_NO = :NEW.STU_NO;
     END IF;
- 
+    */
 END;
 /
 
 INSERT INTO TB_STU
     VALUES(SEQ_STU_NO.NEXTVAL, '휴휴학', 'F', '010-5555-5555', '휴학');
 INSERT INTO TB_STU
-    VALUES(SEQ_STU_NO.NEXTVAL, '이휴학', 'F', '010-5555-5555', '휴학');
+    VALUES(SEQ_STU_NO.NEXTVAL, '최재학', 'M', '010-5555-5555', '재학');
 
 UPDATE TB_STU
 SET STU_STATUS = '졸업'
@@ -306,4 +307,15 @@ BEGIN
 END;
 /
 
-DROP TRIGGER TRG_S02;
+UPDATE TB_STU
+SET STU_STATUS = '휴학'
+WHERE STU_NAME = '최재학';
+
+UPDATE TB_ABSENCE
+SET ABS_STATUS = 'N'
+WHERE STU_NO = 909;
+
+
+
+
+

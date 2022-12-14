@@ -1,0 +1,35 @@
+1. DBMS가 뭔지
+
+2. DDL문 종류 / 정의
+
+3. NUMBER 자료형에 뭐 올수 있는지
+
+4. CHAR(10) 의미 
+
+5. INNER JOIN
+
+6. OUTER JOIN
+
+7. SUBSTR() 뭐냐
+
+8. 테이블이 뭐냐
+
+9. ResultSet ?
+
+10. UPPER() 뭐냐
+
+11. MINUS, INTERSECT 
+
+12. INITCAP()
+
+13. TRIM()
+
+14. UNION, UNIONALL 차이
+
+15. DECODE() 뭐냐
+
+16. CONCAT() <=> ||연결연산자
+
+17, ROLLUP()
+
+18. RANK OVER() DENSE_RANK OVER()

@@ -1,0 +1,111 @@
+1. DBMS가 뭔지
+
+databasemanagementsystem
+데이터관리시스템
+데이터를 추출하고 저장, 관리하는 데이터베이스관리시스템
+
+* 추출, 조작, 정의, 제어
+
+2. DDL문 종류 / 정의
+
+datadefinitionlanguage
+데이터를 정의하는 언어 / 주로 관리자시스템에서 사용
+
+alter : 변경 - 뒤늦게 제약조건 추가
+drop : 삭제
+create : 생성
+
+* ''''객체''''를 생성, 변경, 삭제
+
+3. NUMBER 자료형에 뭐 올수 있는지
+
+정수, 실수 등 모든 숫자
+
+4. CHAR(10) 의미 
+
+10바이트크기의 자료형은 char형
+
+** 10바이트 고정길이 문자열타입
+
+5. INNER JOIN
+
+null값 빼고 조회
+
+실제데이터오 ㅏ행수가ㅣ 다를수도
+
+* 연결시키는 컬럼의 값이 일치하는 행들만 조인되어서 조회
+
+6. OUTER JOIN
+
+null값 포함 조회
+
+실제데이터ㅗ와 행수가 같다
+
+* 연결시키는 컬럼의 값이 일치하지 않는 행도 조인되어서 조회
+
+7. SUBSTR() 뭐냐
+
+자바의substring같은거
+
+문자열에서 문자추출
+
+8. 테이블이 뭐냐
+
+값을 행과열, 표형식으로 저장한 데이터베이스
+
+9. ResultSet ?
+
+셀렉트 값을 담아주는 변수
+
+** 셀렉트한 결과를 표형태로 표현해서 보여주는것
+
+10. UPPER() 뭐냐
+
+다 대문자
+UPPER('ddd') from dual;
+DDD
+
+11. MINUS, INTERSECT
+ 
+* MINUS 차집합 : 선행 결과값에서 후행 결과값을 뺀 나머지
+* INTERSECT 교집합 : 두 쿼리문 수행한 결과값에 중복된 결과값
+
+12. INITCAP()
+
+단어의 첫글자만 대문자로 변경
+
+INITCAP('haha hehe hoho') from dual;
+Haha Hehe Hoho
+
+13. TRIM()
+문자열 앞,뒤의 공백 제거, 앞,뒤가 아닌 문자열 속에있는 공백은 제거하지않음
+
+14. UNION, UNIONALL 차이
+
+* UNION(합집합) : 두 쿼리문을 수행한 결과값을 더한 후 중복되는 값은 한번만 더해지도록
+* UNION ALL(합집합+교집합) : 중복되는 부분이 두번 표현될 수 있음
+
+15. DECODE() 뭐냐
+
+* DECODE(비교하고자하는 대상 컬럼/연산/함수식 , 비교값1, 결과값1, 비교값2, 결과값2)
+
+연산,함수식 결과에 따라 비교값을 결과값으로 바꿔주는 함수
+
+16. CONCAT() <=> ||연결연산자
+
+3개이상안됌
+
+CONCAT('DDD','AAA') FROM DUAL;
+SELECT 'DDD' || 'AAA' FROM DUAL;
+
+
+17, ROLLUP()
+
+* 중간집계함수 / GROUP BY절에 기술
+* GROUP BY ROLL UP(컬럼명)
+
+18. RANK() OVER 정렬기준 DENSE_RANK() OVER
+
+RANK() OVER는 공동1등이 나오면 그 다음 등수는 3등
+
+DENSE_RANK() OVER 는 공동1등이 나오면 그,다음등수는 2등

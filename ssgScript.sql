@@ -19,6 +19,8 @@ ROLLBACK;
 CREATE SEQUENCE SEQ_PNO
 NOCACHE;
 
+DROP SEQUENCE SEQ_PNO;
+
 
 CREATE TABLE TB_PRODUCT(
     PNO NUMBER,
@@ -31,7 +33,7 @@ CREATE TABLE TB_PRODUCT(
     REG_DATE DATE
     );
     
-"INSERT INTO MEMBER VALUES(SEQ_PNO.NEXTVAL, ' p.getpName() 		 ',
+"INSERT INTO TB_PRODUCT VALUES(SEQ_PNO.NEXTVAL, ' p.getpName() 		 ',
 															         p.getPrice() 		,
 															  'p.getNational()	 ',
 															  'p.getBrand()		 '
@@ -39,3 +41,11 @@ CREATE TABLE TB_PRODUCT(
 															  'p.getCategory()	',
 															  SYSDATE)";
 
+UPDATE TB_PRODUCT
+SET PNAME = '칠성사이다제로 500ml'
+WHERE PNO = 2;
+
+COMMIT;
+
+SELECT * FROM TB_PRODUCT
+WHERE (PRICE >= 5000 PRICE <=" + maxPrice + ")
